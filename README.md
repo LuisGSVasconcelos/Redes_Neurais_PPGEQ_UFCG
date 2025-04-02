@@ -2,6 +2,8 @@
 Repositório da disciplina Redes Neurais ministrada no 2025.1 do Programa de Pós-Graduação em Engenharia Quimica da UFCG
 ![image](https://github.com/user-attachments/assets/b47c5422-627f-4af9-91ce-8314f968b080)
 
+
+
 Calendário das aulas:
 
 Andre: Aula 03 (Capítulo 3) - 02/04/2025  <br>
