@@ -6,7 +6,7 @@ Repositório da disciplina Redes Neurais ministrada no 2025.1 do Programa de Pó
 
 Calendário das aulas:
 
-Andre: Aula 03 (Capítulo 3) - 02/04/2025  <br>
+ANDRE: Aula 03 (Capítulo 3) - 02/04/2025  <br>
 ELIZABETH: Aula 04 (Capítulo 4) - 09/04/2025 <br>
 INGRID: Aula 05 (Capítulo 5) - 23/04/2025 <br>
 EMILLY: Aula 06 (Capítulo 6) - 30/04/2025<br>
