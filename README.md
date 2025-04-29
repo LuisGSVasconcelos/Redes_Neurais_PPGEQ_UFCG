@@ -8,14 +8,14 @@ Calendário das aulas:
 
 ANDRE: Aula 03 (Capítulo 3) - 02/04/2025  <br>
 ELIZABETH: Aula 04 (Capítulo 4) - 09/04/2025 <br>
-INGRID: Aula 05 (Capítulo 5) - 23/04/2025 <br>
-EMILLY: Aula 06 (Capítulo 6) - 30/04/2025<br>
-NATHÁLIA: Aula 07 (Capítulo 7) - 07/05/2025 <br>
+LUIS: Aula 05 (Capítulo 5) - 23/04/2025 <br>
+LUIS: Aula 07 (Capítulo 7) - 07/05/2025 <br>
 LEOMÁRIO: Aula 08 (Capítulo 8) - 14/05/2025 <br>
 ARTHUR: Aula 09 (Capítulo 9) - 21/05/2025 <br>
 JUAN: Aula 10 (Capítulo 10) -  28/05/2025 <br>
 VICTOR: Aula 11 (Capítulo 11) - 04/06/2025 <br>
 JHONATA: Aula 12 (Capítulo 12) -11/06/2025
+LUIS: Aula 06 (Capítulo 6) - 18/06/2025<br>
 
 
 
