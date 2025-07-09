@@ -1,0 +1,123 @@
+'''DISCENTES: LEOMÁRIO GUEDES ELIZABETH ALVES
+OBJETIVO DO PROJETO: REALIZAR PREVISÃO DO COMPORTAMENTO DE PARÂMETROS 
+DE UMA COLUNA DE DESTILAÇÃO DE SISTEMA METANOL/ÁGUA: O PROJETO REALIZA
+A GERAÇÃO DE DADOS RANDOMIZADOS E SINTÉTICOS COMO TESTE DO MODELO, TREINA
+E PEDE AO USUÁRIO NOVOS DADOS PARA SEREM INSERIDOS'''
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from tensorflow import keras
+from tensorflow.keras import layers
+
+# 1. Gerar dataset sintético atualizado
+np.random.seed(42)
+N = 1000  # tamanho do dataset
+
+# Variáveis de processo
+vazao_molar = np.random.uniform(100, 300, N)             # kmol/h
+temperatura = np.random.uniform(30, 70, N)               # °C
+pressao_coluna = np.random.uniform(0.9, 2.0, N)          # bar
+num_pratos = np.random.randint(15, 31, N)                # número de pratos
+prato_feed = np.array([np.random.randint(2, n-1) for n in num_pratos])  # prato de alimentação
+reflux_ratio = np.random.uniform(1.0, 4.0, N)            # razão de refluxo
+pressao_cond = np.random.uniform(1.0, 1.2, N)            # bar
+pressao_refeb = np.random.uniform(1.2, 1.8, N)           # bar
+x_m_feed = np.random.uniform(0.5, 0.99, N)               # composição do metanol na alimentação (0.5-0.99)
+
+# Fórmulas heurísticas atualizadas
+q_cond = 0.8 * vazao_molar * reflux_ratio * np.random.uniform(0.95, 1.05, N)  # MJ/h
+q_reb = 1.2 * vazao_molar * reflux_ratio * np.random.uniform(0.95, 1.05, N)   # MJ/h
+x_m_topo = np.clip(
+    0.3 + 0.5 * x_m_feed + 0.4 * (reflux_ratio/4) - 0.1 * (pressao_coluna/2.0) + np.random.normal(0,0.02,N),
+    0, 1
+)
+
+# DataFrame com a nova variável
+df = pd.DataFrame({
+    'vazao_molar': vazao_molar,
+    'temperatura': temperatura,
+    'pressao_coluna': pressao_coluna,
+    'num_pratos': num_pratos,
+    'prato_feed': prato_feed,
+    'reflux_ratio': reflux_ratio,
+    'pressao_cond': pressao_cond,
+    'pressao_refeb': pressao_refeb,
+    'x_m_feed': x_m_feed,
+    'q_cond': q_cond,
+    'q_reb': q_reb,
+    'x_m_topo': x_m_topo
+})
+
+# 2. Dividir dados
+X = df.drop(columns=['q_cond','q_reb','x_m_topo'])
+y = df[['q_cond','q_reb','x_m_topo']]
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Escalar
+scaler_X = StandardScaler()
+scaler_y = StandardScaler()
+
+X_train_scaled = scaler_X.fit_transform(X_train)
+X_test_scaled = scaler_X.transform(X_test)
+y_train_scaled = scaler_y.fit_transform(y_train)
+y_test_scaled = scaler_y.transform(y_test)
+
+# 3. Construir modelo
+model = keras.Sequential([
+    layers.Dense(128, activation='relu', input_shape=(X_train.shape[1],)),
+    layers.Dense(64, activation='relu'),
+    layers.Dense(3)  # 3 saídas: q_cond, q_reb, x_m_topo
+])
+model.compile(optimizer='adam', loss='mse')
+model.summary()
+
+# 4. Treinar
+history = model.fit(X_train_scaled, y_train_scaled, validation_data=(X_test_scaled, y_test_scaled), epochs=100, verbose=0)
+
+# 5. Avaliar e exibir gráficos de erro
+y_pred_scaled = model.predict(X_test_scaled)
+y_pred = scaler_y.inverse_transform(y_pred_scaled)
+
+fig, axs = plt.subplots(1,3, figsize=(18,5))
+for i, target in enumerate(['q_cond', 'q_reb', 'x_m_topo']):
+    axs[i].scatter(y_test.iloc[:,i], y_pred[:,i], alpha=0.5)
+    axs[i].plot([y_test.iloc[:,i].min(), y_test.iloc[:,i].max()],
+                [y_test.iloc[:,i].min(), y_test.iloc[:,i].max()],
+                'r--')
+    axs[i].set_xlabel(f'Real {target}')
+    axs[i].set_ylabel(f'Previsto {target}')
+    axs[i].set_title(f'Predição de {target}')
+plt.tight_layout()
+plt.show()
+
+# 6. Solicitar novos dados ao usuário
+print("\nInsira novos valores para predizer a coluna:")
+novo_dado = {}
+for var in X.columns:
+    prompt = f"{var} ({'kmol/h' if 'vazao' in var else '°C' if 'temp' in var else 'bar' if 'pressao' in var else 'fração' if 'x_m_feed' in var else ''}): "
+    valor = float(input(prompt))
+    novo_dado[var] = valor
+
+novo_X = pd.DataFrame([novo_dado])
+novo_X_scaled = scaler_X.transform(novo_X)
+nova_pred_scaled = model.predict(novo_X_scaled)
+nova_pred = scaler_y.inverse_transform(nova_pred_scaled)
+
+print("\nPredição para novos dados inseridos:")
+print(f"  Energia condensador (q_cond): {nova_pred[0,0]:.2f} MJ/h")
+print(f"  Energia refervedor (q_reb): {nova_pred[0,1]:.2f} MJ/h")
+print(f"  Composição metanol topo (x_m_topo): {nova_pred[0,2]:.4f}")
+
+# 7. Gráficos do histórico
+plt.figure(figsize=(10,5))
+plt.plot(history.history['loss'], label='Loss Treino')
+plt.plot(history.history['val_loss'], label='Loss Validação')
+plt.xlabel('Época')
+plt.ylabel('Loss')
+plt.legend()
+plt.title('Evolução do Erro (Loss) durante o Treinamento')
+plt.show()
