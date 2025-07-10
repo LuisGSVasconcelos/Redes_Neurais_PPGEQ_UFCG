@@ -1,0 +1,10 @@
+# separate training and test data
+from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=1)
+# find optimal hyperparameter via GridSearchCV
+from sklearn.model_selection import GridSearchCV
+param_grid = {'poly__degree': np.arange(1,6)}
+gs = GridSearchCV(pipe, param_grid, scoring='neg_mean_squared_error', cv=3)
+gs.fit(x_train, y_train)
+print('Optimal hyperparameter:', gs.best_params_)
+>>> Optimal hyperparameter: {'poly__degree': 2}
