@@ -1,0 +1,5 @@
+# get model coefficients 
+print(pipe['model'].coef_) # does not include intercept term 
+ 
+>>> [-1.96123e+00 -1.70142e+01 1.61112e+02 5.53503e+02 -1.47185e+03 -5.24500e+03 
+9.88824e+02 1.58830e+04 1.72273e+04 5.73349e+03]
