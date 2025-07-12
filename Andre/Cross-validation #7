@@ -1,0 +1,24 @@
+# separate test data 
+from sklearn.model_selection import train_test_split 
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=1) 
+
+# check dataset sizes 
+print('Number of samples in training set: ', x_train.shape[0]) 
+print('Number of samples in test set: ', x_test.shape[0]) 
+
+>>> Number of samples in training set: 20 
+ Number of samples in test set: 5 
+
+# fit pipeline and predict 
+pipe.fit(x_train, y_train) 
+y_predicted_train = pipe.predict(x_train) 
+y_predicted_test = pipe.predict(x_test) 
+
+# performance metrics 
+from sklearn.metrics import mean_squared_error as mse 
+
+print('Training metric (mse) = ', mse(y_train, y_predicted_train)) 
+print('Test metric (mse) = ', mse(y_test, y_predicted_test)) 
+
+>>> Training metric (mse) = 3.79 
+ Test metric (mse) = 3.56 
