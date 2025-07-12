@@ -1,0 +1,11 @@
+# train-validate-test split 
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=1) 
+x_fit, x_val, y_fit, y_val = train_test_split(x_train, y_train, test_size=0.3, random_state=1) 
+
+print('Number of samples in fitting set: ', x_fit.shape[0]) 
+print('Number of samples in validation set: ', x_val.shape[0]) 
+print('Number of samples in test set: ', x_test.shape[0]) 
+
+>>> Number of samples in fitting set: 14 
+Number of samples in validation set: 6 
+Number of samples in test set: 5
