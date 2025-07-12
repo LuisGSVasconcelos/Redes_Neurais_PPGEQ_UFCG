@@ -1,0 +1,8 @@
+# performance metric 
+from sklearn.metrics import r2_score 
+print('Fitting metric (R2) = ', r2_score(y, y_predicted)) 
+
+>> Fitting metric (R2) = 0.91 
+
+# compute metric using score method
+R2 = pipe.score(x, y) # no need to import metrics module
