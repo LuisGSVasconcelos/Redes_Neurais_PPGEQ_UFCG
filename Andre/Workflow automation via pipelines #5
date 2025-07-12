@@ -1,0 +1,16 @@
+# create pipeline for quadratic fit via linear model 
+# import relevant classes 
+from sklearn.pipeline import Pipeline 
+from sklearn.preprocessing import PolynomialFeatures 
+from sklearn.preprocessing import StandardScaler 
+from sklearn.linear_model import LinearRegression 
+
+# add transformers and estimators sequentially as list of tuples 
+# the names ‘poly’, ‘scaler’, ‘model’ can be used to access the individual elements of pipeline later 
+pipe = Pipeline([('poly', PolynomialFeatures(degree=2, include_bias=False)), 
+ ('scaler', StandardScaler()), 
+ ('model', LinearRegression())]) 
+
+# fit pipeline and predict 
+pipe.fit(x, y) 
+y_predicted = pipe.predict(x)
